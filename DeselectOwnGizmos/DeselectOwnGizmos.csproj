@@ -38,9 +38,6 @@
     <Reference Include="BaseX">
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\NeosVR\Neos_Data\Managed\BaseX.dll</HintPath>
     </Reference>
-    <Reference Include="CloudX.Shared, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\NeosVR\Neos_Data\Managed\CloudX.Shared.dll</HintPath>
-    </Reference>
     <Reference Include="FrooxEngine">
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\NeosVR\Neos_Data\Managed\FrooxEngine.dll</HintPath>
     </Reference>

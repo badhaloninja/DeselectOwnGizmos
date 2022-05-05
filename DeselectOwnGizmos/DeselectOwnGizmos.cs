@@ -10,7 +10,7 @@ namespace DeselectOwnGizmos
     {
         public override string Name => "DeselectOwnGizmos";
         public override string Author => "badhaloninja";
-        public override string Version => "1.0.0";
+        public override string Version => "1.1.0";
         public override string Link => "https://github.com/badhaloninja/DeselectOwnGizmos";
         public override void OnEngineInit()
         {
@@ -26,34 +26,28 @@ namespace DeselectOwnGizmos
             {
                 return gizmo.World.GetUserByAllocationID(gizmo.ReferenceID.User).IsLocalUser;
             }
-            public static void Postfix(DevToolTip __instance, CommonTool tool, ContextMenu menu, ref bool oof)
+            public static void Postfix(DevToolTip __instance, ContextMenu menu, SyncRef<Slot> ____currentGizmo, SyncRef<Slot> ____previousGizmo)
             {
-                Uri deselect = NeosAssets.Graphics.Icons.Item.Deselect;
-                ContextMenuItem item = menu.AddItem("Deselect Own", deselect, color.Purple);
+                Uri deselect = new Uri("neosdb:///f9e3d4646db0607fcbc73981a97cb4f3875dc787fcaa3a6560874b207a95d895.png"); //NeosAssets.Graphics.Icons.Item.Deselect;
+                ContextMenuItem item = menu.AddItem("Deselect Own", deselect, color.White);
                 item.Button.LocalPressed += (IButton button, ButtonEventData eventData) =>
                 {
-                    __instance.World.RootSlot.GetComponentsInChildren<SlotGizmo>(IsLocalUserGizmo).ForEach(delegate (SlotGizmo s)
-                    {
-                        s.Slot.Destroy();
-                    });
+                    __instance.World.RootSlot.GetComponentsInChildren<SlotGizmo>(IsLocalUserGizmo).ForEach((SlotGizmo s) => s.Slot.Destroy());
 
-                    Traverse.Create(__instance).Field<SyncRef<Slot>>("_currentGizmo").Value.Target = null;
-                    Traverse.Create(__instance).Field<SyncRef<Slot>>("_previousGizmo").Value.Target = null;
+                    ____currentGizmo.Target = null;
+                    ____previousGizmo.Target = null;
+                    
                     CommonTool activeTool = __instance.ActiveTool;
                     if (activeTool != null)
-                    {
                         activeTool.CloseContextMenu();
-                    }
+                    
                     SelectAnchor(__instance, null);
                 };
             }
 
             [HarmonyReversePatch]
             [HarmonyPatch(typeof(DevToolTip), "SelectAnchor")]
-            public static void SelectAnchor(DevToolTip instance, PointAnchor pointAnchor)
-            {
-                throw new NotImplementedException("It's a stub");
-            }
+            public static void SelectAnchor(DevToolTip instance, PointAnchor pointAnchor) => throw new NotImplementedException("It's a stub");
         }
         [HarmonyPatch(typeof(SlotRecord), "Pressed")]
         class NonHostInspectorGizmoCreation
@@ -64,7 +58,7 @@ namespace DeselectOwnGizmos
                 {
                     __instance.Slot.GetComponentInParents<SceneInspector>().ComponentView.Target = __instance.TargetSlot.Target;
                     if (!__instance.World.IsAuthority)
-                    {// Create gizmo on double press as self instead of have host do it
+                    { // Create gizmo on double press as self instead of have host do it
                         __instance.TargetSlot.Target.GetGizmo(); 
                     }
                 }
