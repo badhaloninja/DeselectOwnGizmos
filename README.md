@@ -2,6 +2,7 @@
 
 A [NeosModLoader](https://github.com/zkxs/NeosModLoader) mod for [Neos VR](https://neos.com/) that adds the ability to deselect the user's own gizmos
 
+Added deselect to Logix ToolTip as well
 
 Currently has partial support for gizmos created by inspectors
  - If you are in someone else's world gizmos you create via inspectors will actually be created by you
