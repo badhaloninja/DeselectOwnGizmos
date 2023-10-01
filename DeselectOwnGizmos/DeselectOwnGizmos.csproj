@@ -43,7 +43,7 @@
   </ItemGroup>
   
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(CopyToMods)'=='true'">
-    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(NeosPath)nml_mods" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(GamePath)rml_mods" />
     <Message Text="Copied $(TargetFileName) to $(GamePath)rml_mods" Importance="high" />
   </Target>
 </Project>

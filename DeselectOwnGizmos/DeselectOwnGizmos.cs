@@ -13,9 +13,15 @@ namespace DeselectOwnGizmos
         public override string Author => "badhaloninja";
         public override string Version => "2.0.0";
         public override string Link => "https://github.com/badhaloninja/DeselectOwnGizmos";
+        
+        private static ModConfiguration Config;
+
+        [AutoRegisterConfigKey] private static readonly ModConfigurationKey<bool> ProtoFluxTool = new ModConfigurationKey<bool>("ProtoFluxTool", "Adds deselect to the Protoflux tool", () => true);
 
         public override void OnEngineInit()
         {
+            Config = GetConfiguration();
+            Config.Save(true);
             Harmony harmony = new Harmony("me.badhaloninja.DeselectOwnGizmos");
             harmony.PatchAll();
         }
@@ -87,16 +93,20 @@ namespace DeselectOwnGizmos
 
             public static void Postfix(ProtoFluxTool __instance, ContextMenu menu)
             {
-                Uri deselect = OfficialAssets.Graphics.Icons.Item.Deselect; //NeosAssets.Graphics.Icons.Item.Deselect;
-                ContextMenuItem item = menu.AddItem("Deselect Own",deselect,colorX.White);
-                item.Button.LocalPressed += (IButton button, ButtonEventData eventData) =>
+                if (Config.GetValue(ProtoFluxTool))
                 {
-                    __instance.World.RootSlot.GetComponentsInChildren<SlotGizmo>(IsLocalUserGizmo)
-                        .ForEach((SlotGizmo s) => s.Slot.Destroy());
-                    InteractionHandler activeTool = __instance.ActiveHandler;
-                    if (activeTool != null)
-                        activeTool.CloseContextMenu();
-                };
+                    Uri deselect =
+                        OfficialAssets.Graphics.Icons.Item.Deselect; //NeosAssets.Graphics.Icons.Item.Deselect;
+                    ContextMenuItem item = menu.AddItem("Deselect Own", deselect, colorX.White);
+                    item.Button.LocalPressed += (IButton button, ButtonEventData eventData) =>
+                    {
+                        __instance.World.RootSlot.GetComponentsInChildren<SlotGizmo>(IsLocalUserGizmo)
+                            .ForEach((SlotGizmo s) => s.Slot.Destroy());
+                        InteractionHandler activeTool = __instance.ActiveHandler;
+                        if (activeTool != null)
+                            activeTool.CloseContextMenu();
+                    };
+                }
             }
         }
     }
