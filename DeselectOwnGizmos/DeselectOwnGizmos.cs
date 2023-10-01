@@ -1,17 +1,17 @@
-using BaseX;
+using Elements.Core;
 using FrooxEngine;
 using HarmonyLib;
-using NeosModLoader;
+using ResoniteModLoader;
 using System;
-using FrooxEngine.LogiX;
+using FrooxEngine.ProtoFlux;
 
 namespace DeselectOwnGizmos
 {
-    public class DeselectOwnGizmos : NeosMod
+    public class DeselectOwnGizmos : ResoniteMod
     {
         public override string Name => "DeselectOwnGizmos";
         public override string Author => "badhaloninja";
-        public override string Version => "1.1.0";
+        public override string Version => "2.0.0";
         public override string Link => "https://github.com/badhaloninja/DeselectOwnGizmos";
 
         public override void OnEngineInit()
@@ -21,7 +21,7 @@ namespace DeselectOwnGizmos
         }
 
 
-        [HarmonyPatch(typeof(DevToolTip), "GenerateMenuItems")]
+        [HarmonyPatch(typeof(DevTool), "GenerateMenuItems")]
         class DevToolTipGenerateContext
         {
             static bool IsLocalUserGizmo(SlotGizmo gizmo)
@@ -29,13 +29,11 @@ namespace DeselectOwnGizmos
                 return gizmo.World.GetUserByAllocationID(gizmo.ReferenceID.User).IsLocalUser;
             }
 
-            public static void Postfix(DevToolTip __instance, ContextMenu menu, SyncRef<Slot> ____currentGizmo,
+            public static void Postfix(DevTool __instance, ContextMenu menu, SyncRef<Slot> ____currentGizmo,
                 SyncRef<Slot> ____previousGizmo)
             {
-                Uri deselect =
-                    new Uri(
-                        "neosdb:///f9e3d4646db0607fcbc73981a97cb4f3875dc787fcaa3a6560874b207a95d895.png"); //NeosAssets.Graphics.Icons.Item.Deselect;
-                ContextMenuItem item = menu.AddItem("Deselect Own", deselect, color.White);
+                Uri deselect =OfficialAssets.Graphics.Icons.Item.Deselect; //NeosAssets.Graphics.Icons.Item.Deselect;
+                ContextMenuItem item = menu.AddItem("Deselect Own", deselect, colorX.White);
                 item.Button.LocalPressed += (IButton button, ButtonEventData eventData) =>
                 {
                     __instance.World.RootSlot.GetComponentsInChildren<SlotGizmo>(IsLocalUserGizmo)
@@ -44,7 +42,7 @@ namespace DeselectOwnGizmos
                     ____currentGizmo.Target = null;
                     ____previousGizmo.Target = null;
 
-                    CommonTool activeTool = __instance.ActiveTool;
+                    InteractionHandler activeTool = __instance.ActiveHandler;
                     if (activeTool != null)
                         activeTool.CloseContextMenu();
 
@@ -53,8 +51,8 @@ namespace DeselectOwnGizmos
             }
 
             [HarmonyReversePatch]
-            [HarmonyPatch(typeof(DevToolTip), "SelectAnchor")]
-            public static void SelectAnchor(DevToolTip instance, PointAnchor pointAnchor) =>
+            [HarmonyPatch(typeof(DevTool), "SelectAnchor")]
+            public static void SelectAnchor(DevTool instance, PointAnchor pointAnchor) =>
                 throw new NotImplementedException("It's a stub");
         }
 
@@ -79,7 +77,7 @@ namespace DeselectOwnGizmos
             }
         }
 
-        [HarmonyPatch(typeof(LogixTip), "GenerateMenuItems")]
+        [HarmonyPatch(typeof(ProtoFluxTool), "GenerateMenuItems")]
         class LogixTipGenerateContext
         {
             static bool IsLocalUserGizmo(SlotGizmo gizmo)
@@ -87,17 +85,15 @@ namespace DeselectOwnGizmos
                 return gizmo.World.GetUserByAllocationID(gizmo.ReferenceID.User).IsLocalUser;
             }
 
-            public static void Postfix(LogixTip __instance, ContextMenu menu)
+            public static void Postfix(ProtoFluxTool __instance, ContextMenu menu)
             {
-                Uri deselect = new Uri("neosdb:///f9e3d4646db0607fcbc73981a97cb4f3875dc787fcaa3a6560874b207a95d895.png"); //NeosAssets.Graphics.Icons.Item.Deselect;
-                ContextMenuItem item = menu.AddItem("Deselect Own", deselect, color.White);
+                Uri deselect = OfficialAssets.Graphics.Icons.Item.Deselect; //NeosAssets.Graphics.Icons.Item.Deselect;
+                ContextMenuItem item = menu.AddItem("Deselect Own",deselect,colorX.White);
                 item.Button.LocalPressed += (IButton button, ButtonEventData eventData) =>
                 {
                     __instance.World.RootSlot.GetComponentsInChildren<SlotGizmo>(IsLocalUserGizmo)
                         .ForEach((SlotGizmo s) => s.Slot.Destroy());
-
-
-                    CommonTool activeTool = __instance.ActiveTool;
+                    InteractionHandler activeTool = __instance.ActiveHandler;
                     if (activeTool != null)
                         activeTool.CloseContextMenu();
                 };
