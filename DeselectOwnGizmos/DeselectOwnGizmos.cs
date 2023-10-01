@@ -56,8 +56,7 @@ namespace DeselectOwnGizmos
 
             [HarmonyReversePatch]
             [HarmonyPatch(typeof(DevTool), "SelectAnchor")]
-            public static void SelectAnchor(DevTool instance, PointAnchor pointAnchor) =>
-                throw new NotImplementedException("It's a stub");
+            public static void SelectAnchor(DevTool instance, PointAnchor pointAnchor) => throw new NotImplementedException("It's a stub");
         }
 
         [HarmonyPatch(typeof(SlotRecord), "Pressed")]
@@ -96,8 +95,7 @@ namespace DeselectOwnGizmos
                     ContextMenuItem item = menu.AddItem("Deselect Own", deselect, colorX.White);
                     item.Button.LocalPressed += (IButton button, ButtonEventData eventData) =>
                     {
-                        __instance.World.RootSlot.GetComponentsInChildren<SlotGizmo>(IsLocalUserGizmo)
-                            .ForEach((SlotGizmo s) => s.Slot.Destroy());
+                        __instance.World.RootSlot.GetComponentsInChildren<SlotGizmo>(IsLocalUserGizmo).ForEach((SlotGizmo s) => s.Slot.Destroy());
                         InteractionHandler activeTool = __instance.ActiveHandler;
                         if (activeTool != null)
                             activeTool.CloseContextMenu();
