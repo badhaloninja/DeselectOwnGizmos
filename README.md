@@ -2,11 +2,11 @@
 
 A [ResoniteModLoader](https://github.com/resonite-modding-group/ResoniteModLoader) mod for [Resonite](https://resonite.com/) that adds the ability to deselect the user's own gizmos
 
-Added deselect to Logix ToolTip as well
-
 Currently has partial support for gizmos created by inspectors
  - If you are in someone else's world gizmos you create via inspectors will actually be created by you
  - If you are host inspectors will still create gizmos as you unless that user also has the mod
+
+Option to show deselect button on ProtoFlux tools
 
 ## Installation
 1. Install [ResoniteModLoader](https://github.com/resonite-modding-group/ResoniteModLoader).
