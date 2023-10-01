@@ -35,15 +35,13 @@ namespace DeselectOwnGizmos
                 return gizmo.World.GetUserByAllocationID(gizmo.ReferenceID.User).IsLocalUser;
             }
 
-            public static void Postfix(DevTool __instance, ContextMenu menu, SyncRef<Slot> ____currentGizmo,
-                SyncRef<Slot> ____previousGizmo)
+            public static void Postfix(DevTool __instance, ContextMenu menu, SyncRef<Slot> ____currentGizmo, SyncRef<Slot> ____previousGizmo)
             {
                 Uri deselect =OfficialAssets.Graphics.Icons.Item.Deselect; //NeosAssets.Graphics.Icons.Item.Deselect;
                 ContextMenuItem item = menu.AddItem("Deselect Own", deselect, colorX.White);
                 item.Button.LocalPressed += (IButton button, ButtonEventData eventData) =>
                 {
-                    __instance.World.RootSlot.GetComponentsInChildren<SlotGizmo>(IsLocalUserGizmo)
-                        .ForEach((SlotGizmo s) => s.Slot.Destroy());
+                    __instance.World.RootSlot.GetComponentsInChildren<SlotGizmo>(IsLocalUserGizmo).ForEach((SlotGizmo s) => s.Slot.Destroy());
 
                     ____currentGizmo.Target = null;
                     ____previousGizmo.Target = null;
@@ -69,8 +67,7 @@ namespace DeselectOwnGizmos
             {
                 if (__instance.Time.WorldTime - ____lastPress < 0.35)
                 {
-                    __instance.Slot.GetComponentInParents<SceneInspector>().ComponentView.Target =
-                        __instance.TargetSlot.Target;
+                    __instance.Slot.GetComponentInParents<SceneInspector>().ComponentView.Target = __instance.TargetSlot.Target;
                     if (!__instance.World.IsAuthority)
                     {
                         // Create gizmo on double press as self instead of have host do it
@@ -95,8 +92,7 @@ namespace DeselectOwnGizmos
             {
                 if (Config.GetValue(ProtoFluxTool))
                 {
-                    Uri deselect =
-                        OfficialAssets.Graphics.Icons.Item.Deselect; //NeosAssets.Graphics.Icons.Item.Deselect;
+                    Uri deselect = OfficialAssets.Graphics.Icons.Item.Deselect; //NeosAssets.Graphics.Icons.Item.Deselect;
                     ContextMenuItem item = menu.AddItem("Deselect Own", deselect, colorX.White);
                     item.Button.LocalPressed += (IButton button, ButtonEventData eventData) =>
                     {
