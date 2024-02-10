@@ -11,7 +11,7 @@ namespace DeselectOwnGizmos
     {
         public override string Name => "DeselectOwnGizmos";
         public override string Author => "badhaloninja";
-        public override string Version => "2.0.0";
+        public override string Version => "2.0.1";
         public override string Link => "https://github.com/badhaloninja/DeselectOwnGizmos";
         
         private static ModConfiguration Config;
@@ -22,7 +22,7 @@ namespace DeselectOwnGizmos
         {
             Config = GetConfiguration();
 
-            Harmony harmony = new("me.badhaloninja.DeselectOwnGizmos");
+            Harmony harmony = new("ninja.badhalo.DeselectOwnGizmos");
             harmony.PatchAll();
         }
 
